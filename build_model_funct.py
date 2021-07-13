@@ -34,13 +34,7 @@ def transform_zfraction_to_sfrfraction(sfr_fraction=None, z_fraction=None, **ext
 
 ### Build a prospect.models.SedModel object ###
 
-def build_model(**run_params):   
-    # object_redshift = run_params['object_Redshift'], tage_univ = run_params['tage_of_univ'], 
-    # ldist = run_params['ldist_Mpc'], TemplateType = run_params['Template_Type'], ncomp = run_params['ncomp'], agebins_init = run_params['agebins_init'], 
-    # tilde_alpha = run_params['tilde_alpha'], z_fraction_init= run_params['z_fraction_init'], 
-# def build_model(object_redshift = G_Redshift, tage_univ = tage_of_univ, 
-#     ldist = ldist_Mpc, TemplateType = Template_Type, ncomp = ncomp, agebins_init = agebins.T, 
-#     tilde_alpha = tilde_alpha, z_fraction_init=z_fraction_init, **extras):    
+def build_model(**run_params):    
 
     ### Get (a copy of) the prepackaged model set dict (dict of dicts, keyed by parameter name) ###
     model_params = TemplateLibrary["alpha"]
@@ -89,9 +83,13 @@ def build_model(**run_params):
                     'init_disp': 0.02,
                     'prior': priors.Beta(alpha=run_params['tilde_alpha'], 
                         beta=np.ones_like(run_params['tilde_alpha']),mini=0.0,maxi=1.0)}
-    
-    model_params['total_mass'] = {'N': 1, 'isfree': False,
-                    'init': 10000000000}
+    if run_params['total_mass_switch'] == False:
+        print('Total_mass is off')
+        model_params['total_mass'] = {'N': 1, 'isfree': False,
+                        'init': 10000000000}
+    elif run_params['total_mass_switch'] != True:
+        # This should be empty
+        empty_var_tmass = 1
 
     model_params['imf_type'] = {'N': 1, 'isfree': False, 'init': 1, 
                     'units': None,
@@ -129,6 +127,7 @@ def build_model(**run_params):
     model_params['dust1_index'] = {'N': 1, 'isfree': False, 'init': -1.0,
                     'units': '',
                     'prior': priors.TopHat(mini=-1.5, maxi=-0.5)}
+                    # Try init = -0.2?
                     # Power law index of the attenuation curve affecting stars younger than 
                     #   dust_tesc corresponding to dust1 (FSPS)
 
@@ -216,7 +215,7 @@ def build_model(**run_params):
                         'prior_args': None}
         
         model_params['fagn'] = {'N': 1, 'isfree': True, 'init': 0.05,
-                        'init_disp': 0.05,
+                        'init_disp': 0.05,      
                         'disp_floor': 0.01,
                         'units': '',
                         'prior': priors.LogUniform(mini=0.000316228, maxi=3.0)}
@@ -226,6 +225,19 @@ def build_model(**run_params):
                         'disp_floor': 2,
                         'units': '',
                         'prior': priors.LogUniform(mini=5.0, maxi=150.0)}
+    else:
+        print('AGN parameters are off')
+        model_params['fagn'] = {'N': 1, 'isfree': False, 'init': 0, 'units': ''}
+        model_params['add_agn_dust'] = {'N': 1, 'isfree': False, 'init': True,
+                        'units': '',
+                        'prior_function_name': None,
+                        'prior_args': None}
+        model_params['agn_tau'] = {'N': 1, 'isfree': False, 'init': 10.0,
+                        'init_disp': 10,
+                        'disp_floor': 2,
+                        'units': '',
+                        'prior': priors.LogUniform(mini=5.0, maxi=150.0)}
+        
     ########################################################################
 
 
