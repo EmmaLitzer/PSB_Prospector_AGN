@@ -1,4 +1,4 @@
-import sedpy
+import sedpy    # contains some routines for computing projecting spectra onto filter bandpasses
 from sedpy import observate
 from astropy.io import fits
 from prospect.utils.obsutils import fix_obs
@@ -105,6 +105,17 @@ def build_obs( **run_params):
     obs["phot_mask"] = np.full((len(Flux_Data[run_params['galaxy_num']])), True, dtype=bool)  # use all photomectric data
     # obs["phot_mask"] = np.ones((len(Flux_Data[galaxy_num])), dtype=bool)
     # obs["phot_mask"] = obs['maggies'] != 0
+
+    for i in range(0, len(obs["maggies"])):
+        if obs["maggies"][i] != 0 and obs["maggies_unc"][i] == 0:
+            """ If a flux value is a upper limit instead of a proper flux, 
+                redefine flux as 0 and uncertainty as the 1σ value.
+            """
+            obs["maggies_unc"][i] = obs["maggies"][i] /3            # to recieve 1σ from 3σ 
+            obs["maggies"][i] = 0
+
+
+
 
     ### Array of effective wavelengths for each filter (not necessary, but can be useful for plotting) ###
     obs["phot_wave"] = np.array([f.wave_effective for f in obs["filters"]])
