@@ -84,7 +84,7 @@ def build_model(**run_params):
                     'prior': priors.Beta(alpha=run_params['tilde_alpha'], 
                         beta=np.ones_like(run_params['tilde_alpha']),mini=0.0,maxi=1.0)}
     if run_params['total_mass_switch'] == False:
-        print('Total_mass is off')
+        print('\t\tTotal_mass is off')
         model_params['total_mass'] = {'N': 1, 'isfree': False,
                         'init': 10000000000}
     elif run_params['total_mass_switch'] != True:
@@ -126,7 +126,7 @@ def build_model(**run_params):
 
     model_params['dust1_index'] = {'N': 1, 'isfree': False, 'init': -1.0,
                     'units': '',
-                    'prior': priors.TopHat(mini=-1.5, maxi=-0.5)}
+                    'prior': priors.TopHat(mini=-1.5, maxi=0)}
                     # Try init = -0.2?
                     # Power law index of the attenuation curve affecting stars younger than 
                     #   dust_tesc corresponding to dust1 (FSPS)
@@ -226,7 +226,7 @@ def build_model(**run_params):
                         'units': '',
                         'prior': priors.LogUniform(mini=5.0, maxi=150.0)}
     else:
-        print('AGN parameters are off')
+        print('\t\tAGN parameters are off')
         model_params['fagn'] = {'N': 1, 'isfree': False, 'init': 0, 'units': ''}
         model_params['add_agn_dust'] = {'N': 1, 'isfree': False, 'init': True,
                         'units': '',
