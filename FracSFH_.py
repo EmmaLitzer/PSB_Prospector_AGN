@@ -1,5 +1,4 @@
 import numpy as np
-from my_conversions import * 
 from astropy.cosmology import WMAP9
 from prospect.sources import FastStepBasis
 from sedpy import observate
