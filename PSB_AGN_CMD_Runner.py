@@ -1,3 +1,12 @@
+
+# File is intended to run on the UIUC Campus Cluster (CAPs).
+# You can specify the galaxies you want to run
+
+# In terminal:
+#     To run all galaxies:        ~$ python3 PSB_AGN_CMD_Runner.py all
+#     To run galaxies 1, 6, 12:   ~$ python3 PSB_AGN_CMD_Runner.py 1 6 12
+
+
 # 1:    ### Import packages ### ----------------------------------------------------------------------------
 import time, sys, os
 import numpy as np
@@ -15,11 +24,12 @@ from astroquery.sdss import SDSS
 from scipy.io import readsav
 
 # Import prospector 
-sys.path.insert(0, '/mnt/c/Users/emma_d/ASTR_Research/lib/python3.8/site-packages/repo/prospector/')
+# sys.path.insert(0, '/mnt/c/Users/emma_d/ASTR_Research/lib/python3.8/site-packages/repo/prospector/')
 import prospect     
 from prospect.fitting import fit_model
 from prospect.io import write_results as writer
-import corner
+from prospect.plotting import corner
+# import corner
 
 # Import my build functions
 from build_model_funct import build_model
@@ -157,7 +167,7 @@ def PSB_AGN_CAPS_Funct(galaxy_num, Template_Type):
 
 
     # 4:    ### Import full galaxy file for all 58 galaxies ### --------------------------------------------------
-    AGN_file = fits.open('/mnt/c/Users/emma_d/ASTR_Research/Data/asu.fit')
+    AGN_file = fits.open('/home/elitzer3/scratch/PSB_AGN_Scratch/Data/asu.fit') # '/mnt/c/Users/emma_d/ASTR_Research/Data/asu.fit'
     AGN_data = AGN_file[1].data
 
 
@@ -166,9 +176,10 @@ def PSB_AGN_CAPS_Funct(galaxy_num, Template_Type):
     Template_Type = Template_Type
 
     # Create galaxy file to store plots and hdf5 data file
-    if not os.path.exists('Galaxy_output/G{}/'.format(galaxy_num)):
-        os.mkdir('Galaxy_output/G{}/'.format(galaxy_num))
-    Galaxy_Path = 'Galaxy_output/G{}/'.format(galaxy_num)
+    
+    if not os.path.exists('/home/elitzer3/scratch/PSB_AGN_Scratch//Galaxy_output/G{}/'.format(galaxy_num)): #'Galaxy_output/G{}/'
+        os.mkdir('/home/elitzer3/scratch/PSB_AGN_Scratch//Galaxy_output/G{}/'.format(galaxy_num))
+    Galaxy_Path = '/home/elitzer3/scratch/PSB_AGN_Scratch//Galaxy_output/G{}/'.format(galaxy_num)
 
     print('{0}: This is for Galaxy {1}'.format(time.strftime("%H:%M:%S", time.localtime()), galaxy_num))
 
@@ -215,7 +226,7 @@ def PSB_AGN_CAPS_Funct(galaxy_num, Template_Type):
 
 
     # 9:    ### Retreive IRS Data and indicate if it exists ### -------------------------------------------------
-    ea_struct = readsav('Data/ea_struct_v9.sav')['ea_struct']
+    ea_struct = readsav('/home/elitzer3/scratch/PSB_AGN_Scratch/Data/ea_struct_v9.sav')['ea_struct'] #'Data/ea_struct_v9.sav'
 
     gal_desig = AGN_data[galaxy_num][1]
     gal_EA_Desig = gal_desig[2:]
@@ -412,8 +423,8 @@ print('{0}: Running PSB_AGN_CMD_Runner.py for Galaxies: \t {1}'.format(time.strf
 
 if str(Galaxy_list[0]) == 'all':
     for i in range(0, 58):
-        PSB_AGN_CAPS_Funct(galaxy_num = i, Template_Type = 'TEST_CAPS_All_Galaxy_Run')
+        PSB_AGN_CAPS_Funct(galaxy_num = i, Template_Type = 'Test_CAPS_All_Galaxy_Run')
 
 else:
     for i in range(0, len(Galaxy_list)):
-        PSB_AGN_CAPS_Funct(galaxy_num = int(Galaxy_list[i]), Template_Type = 'TEST_CAPS_Limited_Galaxy_Run' )
+        PSB_AGN_CAPS_Funct(galaxy_num = int(Galaxy_list[i]), Template_Type = 'Test_CAPS_Limited_Galaxy_Run' )
