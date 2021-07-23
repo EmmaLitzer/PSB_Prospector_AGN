@@ -11,7 +11,7 @@ def mJy_to_maggies(mJy):
 
 # -----------------------------------------------------------------------------
 
-AGN_file = fits.open('/mnt/c/Users/emma_d/ASTR_Research/Data/asu.fit')
+AGN_file = fits.open('/home/elitzer3/scratch/PSB_AGN_Scratch/Data/asu.fit')
 AGN_data = AGN_file[1].data
 
 # -----------------------------------------------------------------------------
