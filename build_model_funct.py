@@ -271,9 +271,10 @@ def build_model(**run_params):
     model_params["lumdist"] = {"N": 1, "isfree": False, "init": run_params['ldist'], 
                     "units":"Mpc"} 
 
-    model_params['logmass'] = {'N': 1, 'isfree': True, 'init': 10.0,
+    model_params['logmass'] = {'N': 1, 'isfree': True, 'init': run_params['logmass_init'],    #OG: 10.0
                     'units': 'Msun',
-                    'prior': priors.TopHat(mini=5.0, maxi=13.0)}
+                    'prior': priors.TopHat(mini=run_params['logmass_init']*.85, maxi=13.0)} #5
+    print("logmass_init:", run_params['logmass_init'])
 
     model_params['mass'] = { 'N': 1, 'isfree': False, 'init': 1e10, 
                     'units': 'Msun',
@@ -290,7 +291,8 @@ def build_model(**run_params):
 
     # Create a fit order in order to fit in higest priority first                # From Leja
     fit_order = ['logmass', 'z_fraction', 'dust2', 'logzsol', 'dust_index', 
-                    'dust1_fraction', 'duste_qpah', 'duste_gamma', 'duste_umin'] # add AGN to end
+                    'dust1_fraction', 'duste_qpah', 'duste_gamma', 'duste_umin',
+                    'total_mass', 'fagn', 'agn_tau', 'dust_ratio'] # add AGN to end
 
     parnames = {k: model_params[k] for k in fit_order}
     tparams = parnames

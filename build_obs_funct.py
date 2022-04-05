@@ -11,7 +11,14 @@ def mJy_to_maggies(mJy):
 
 # -----------------------------------------------------------------------------
 
-AGN_file = fits.open('/home/elitzer3/scratch/PSB_AGN_Scratch/Data/asu.fit')
+CAPS = False
+
+if CAPS == True:
+    AGN_FITS_PATH = '/home/elitzer3/scratch/PSB_AGN_Scratch/Data/asu.fit' 
+else:
+    AGN_FITS_PATH = '/mnt/c/Users/emma_d/ASTR_Research/Data/asu.fit'
+
+AGN_file = fits.open(AGN_FITS_PATH)
 AGN_data = AGN_file[1].data
 
 # -----------------------------------------------------------------------------
@@ -111,7 +118,7 @@ def build_obs( **run_params):
             """ If a flux value is a upper limit instead of a proper flux, 
                 redefine flux as 0 and uncertainty as the 1σ value.
             """
-            obs["maggies_unc"][i] = obs["maggies"][i] /3            # to recieve 1σ from 3σ 
+            obs["maggies_unc"][i] = obs["maggies"][i]/5            # to recieve 1σ from 5σ (Li limit flags!)
             obs["maggies"][i] = 0
 
 
